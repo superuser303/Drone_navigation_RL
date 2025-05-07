@@ -2,7 +2,6 @@
 Setup script for drone RL project in VS Code Online
 """
 
-# Create a virtual environment
 import sys
 import subprocess
 import os
@@ -19,11 +18,11 @@ def setup_environment():
     os.makedirs("logs", exist_ok=True)
     os.makedirs("models", exist_ok=True)
     
-    # Ensure pip is up to date
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
+    # Ensure pip, setuptools, and wheel are up to date
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"])
     
-    # Install specific NumPy version to avoid compatibility issues
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy==1.23.5"])
+    # Install specific NumPy version compatible with Python 3.12
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy>=1.26.0"])
     
     # Install main dependencies
     packages = [
@@ -40,10 +39,18 @@ def setup_environment():
     
     # Install gym-pybullet-drones
     print("Installing gym-pybullet-drones...")
-    subprocess.check_call([
-        sys.executable, "-m", "pip", "install", 
-        "git+https://github.com/utiasDSL/gym-pybullet-drones.git@v1.0.0"
-    ])
+    try:
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", 
+            "git+https://github.com/utiasDSL/gym-pybullet-drones.git@v1.0.0"
+        ])
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing gym-pybullet-drones: {e}")
+        print("Trying to install with --no-deps to avoid conflicts...")
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", "--no-deps",
+            "git+https://github.com/utiasDSL/gym-pybullet-drones.git@v1.0.0"
+        ])
     
     # Test imports
     try:
