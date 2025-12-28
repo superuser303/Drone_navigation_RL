@@ -121,7 +121,3 @@ Training progress and evaluation metrics are saved in the `logs/` directory as p
 ## Contributing
 
 Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
-
-## License
-
-This project is open source. Please check the license file for details.
